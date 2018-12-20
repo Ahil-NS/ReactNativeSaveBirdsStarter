@@ -1,7 +1,19 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, TouchableHighlight,TouchableOpacity} from 'react-native';
+import formatTime from 'minutes-seconds-milliseconds';
 
 export default class App extends Component {
+
+  constructor(props){
+    super(props);
+    this.state = {
+      timeElapsed: null,
+      running: false,
+      startTime: null,
+      laps: []
+    }
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -17,28 +29,79 @@ export default class App extends Component {
         </View>
       </View>
       
-      <View style={[styles.bottomContainer,{alignItems:"center"}]}>
-        <Text style={styles.labItems}>Lab 1</Text>
+      <View style={[styles.bottomContainer]}>
+        {this.laps()}
       </View>
 
       </View>
     );
   }
+
+  laps(){
+    return this.state.laps.map(function(time, index){
+      return <View style= {styles.lap}> 
+        <Text style= {styles.labItems}>
+          Lap #{index+1}
+        </Text>
+        <Text style= {styles.labItems} >
+          {formatTime(time)}
+        </Text>
+      </View>
+    })
+  }
   timerButton(){
     return <View>
-      <Text style= {styles.timer}>00.00.00</Text>
+      <Text style= {styles.timer}>{formatTime(this.state.timeElapsed)}</Text>
     </View>
   }
   startButton(){
-    return <View style= {[styles.button,styles.startButton]}>
-      <Text>START</Text>
-    </View>
+    var style = this.state.running ? styles.stopButton : styles.startButton
+    return <TouchableOpacity 
+    style= {[styles.button,style]}
+    //onPress = {this.handleStartPress}
+    onPress={() => this.handleStartPress()}
+    >
+      <Text>
+        {this.state.running ? 'Stop' : 'Start'}
+      </Text>
+    </TouchableOpacity>
   }
+
   labButton(){
-    return <View style= {styles.button}>
+    return <TouchableOpacity 
+    style= {styles.button}
+    onPress={() => this.handleLapPress()}
+    >
       <Text>LAB</Text>
-    </View>
+    </TouchableOpacity>
   }
+
+  handleLapPress(){
+    var lap = this.state.timeElapsed;
+    this.setState({
+      startTime: new Date(),
+      laps: this.state.laps.concat([lap])
+    })
+  }
+  handleStartPress(){
+    if(this.state.running){
+      clearInterval(this.interval);
+      this.setState({running:false})
+      return
+    }
+  
+    this.setState({startTime: new Date()})
+
+    this.interval = setInterval(() => {
+      this.setState({
+        timeElapsed: new Date() - this.state.startTime,
+        running: true
+
+      });
+    },30);
+  }
+
+  
 
   //Use This for designing Screens
   // border(colorInput){
@@ -88,7 +151,14 @@ const styles = StyleSheet.create({
   startButton:{
     borderColor: '#00CC00'
   },
+  stopButton:{
+    borderColor: '#CC0000'
+  },
   labItems:{
-    fontSize: 20
+    fontSize: 40
+  },
+  lap:{
+    flexDirection: 'row',
+    justifyContent: 'space-around'
   }
 });
