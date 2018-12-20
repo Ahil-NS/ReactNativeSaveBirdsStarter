@@ -1,49 +1,94 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
-
-type Props = {};
-export default class App extends Component<Props> {
+export default class App extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text style={styles.instructions}>To get started, edit App.js</Text>
-        <Text style={styles.instructions}>{instructions}</Text>
+
+      <View style={styles.topContainer}>
+        <View style={styles.timerWrapper}>
+          {this.timerButton()}
+        </View>
+        
+        <View style={styles.buttonWrapper}>
+          {this.startButton()}
+          {this.labButton()}
+        </View>
+      </View>
+      
+      <View style={[styles.bottomContainer,{alignItems:"center"}]}>
+        <Text style={styles.labItems}>Lab 1</Text>
+      </View>
+
       </View>
     );
   }
+  timerButton(){
+    return <View>
+      <Text style= {styles.timer}>00.00.00</Text>
+    </View>
+  }
+  startButton(){
+    return <View style= {[styles.button,styles.startButton]}>
+      <Text>START</Text>
+    </View>
+  }
+  labButton(){
+    return <View style= {styles.button}>
+      <Text>LAB</Text>
+    </View>
+  }
+
+  //Use This for designing Screens
+  // border(colorInput){
+  //   return{
+  //     borderColor: colorInput,
+  //     borderWidth: 4
+  //   }
+  // }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'stretch',
     backgroundColor: '#F5FCFF',
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+  topContainer:{
+    flex:1,
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+  bottomContainer:{
+    flex:1
   },
+  timerWrapper:{
+    flex:5,
+    justifyContent:'center',
+    alignItems: 'center',
+  },
+  //Flex Direction default colunm for mobile
+  buttonWrapper:{
+    flex:3,
+    flexDirection:'row',
+    alignItems:'center',
+    justifyContent: 'space-around'
+  },
+  timer:{
+    fontSize: 60
+  },
+  button:{
+    borderWidth: 2,
+    height: 100,
+    width: 100,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center'
+
+  },
+  startButton:{
+    borderColor: '#00CC00'
+  },
+  labItems:{
+    fontSize: 20
+  }
 });
